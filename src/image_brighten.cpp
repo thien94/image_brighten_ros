@@ -76,7 +76,46 @@ void imageBrighten::process_next_image(const ros::TimerEvent& event)
 		m_image_buffer.pop_front();
 		scope_lock.unlock();
 
-		cv::Mat frame = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::BGR8)->image;
+		// Copy the ros image message to cv::Mat.
+		cv_bridge::CvImageConstPtr cv_ptr;
+		if (msg->encoding == "8UC1") // specifically for iccv tartanair - rgb
+		{
+			sensor_msgs::Image img;
+			img.header = msg->header;
+			img.height = msg->height;
+			img.width = msg->width;
+			img.is_bigendian = msg->is_bigendian;
+			img.step = msg->step;
+			img.data = msg->data;
+			img.encoding = "mono8";
+			cv_ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::BGR8);
+		}
+		else 
+		if (msg->encoding == "rgb8") // specifically for iccv tartanair - rgb
+		{
+			sensor_msgs::Image img;
+			img.header = msg->header;
+			img.height = msg->height;
+			img.width = msg->width;
+			img.is_bigendian = msg->is_bigendian;
+			img.step = msg->step * 3;
+			img.data = msg->data;
+			img.encoding = msg->encoding;
+			cv_ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::BGR8);
+		}
+		else {
+			try
+			{
+				cv_ptr = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::BGR8);
+			}
+			catch (cv_bridge::Exception& e)
+			{
+				ROS_ERROR("cv_bridge exception: %s", e.what());
+			}
+		}
+    
+		cv::Mat frame = cv_ptr->image.clone();
+		// cv::Mat frame = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::BGR8)->image;
 
 		cv::Mat image_in;
 
@@ -128,6 +167,7 @@ void imageBrighten::process_next_image(const ros::TimerEvent& event)
 			ROS_WARN_ONCE("Brighten Disabled");
 			image_out = image_in;
 		}
+
 		if(m_pub_brighten_image.getNumSubscribers() > 0)
 		{
 			sensor_msgs::Image::Ptr output_msg = cv_bridge::CvImage(msg->header, "bgr8", image_out).toImageMsg();

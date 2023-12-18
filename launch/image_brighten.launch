@@ -1,5 +1,5 @@
 <launch>
-  <arg name="topic_image_input" default="/cam0/cam0" />
+  <arg name="topic_image_input" default="/tartanair/image_left" />
 
   <!-- <node name="image_throttler" type="throttle" pkg="topic_tools" args="messages 
               $(arg topic_image_input) 1.0 $(arg topic_image_input)/throttled" /> -->
@@ -15,7 +15,7 @@
     <param name="enable_brighten" value="true" type="bool" />
 
     # Get the latest frame at this frequency (may run slower, always processes latest frame)
-    <param name="max_process_freq" value="20" type="double" />
+    <param name="max_process_freq" value="30" type="double" />
 
     # Pre Processing Rescale Factor: a factor of 2 will divide the resolution by 2
     <param name="scale_factor" value="1" type="int" />
@@ -23,9 +23,9 @@
     # Dark Channel Search Radius
     <param name="dark_ch_scale" value="4" type="int" />
     <param name="transmission_scale" value="4" type="int" />
-    <param name="dehaze_radius" value="5" type="int" />
-    <param name="dehaze_omega" value="0.85" type="double" />
-    <param name="dehaze_t0" value="0.15" type="double" />
+    <param name="dehaze_radius" value="1" type="int" />
+    <param name="dehaze_omega" value="0.0" type="double" />
+    <param name="dehaze_t0" value="0.0" type="double" />
 
     # Guided Filter Radius
     <param name="guided_filter_radius" value="45" type="int" />

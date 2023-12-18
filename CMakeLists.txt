@@ -17,9 +17,12 @@ find_package(catkin REQUIRED COMPONENTS
   nodelet
 )
 
-set("OpenCV_DIR" "/usr/share/OpenCV") #FORCE SYSTEM VERSION
+# set("OpenCV_DIR" "/usr/share/OpenCV") #FORCE SYSTEM VERSION
+# find_package( OpenCV REQUIRED )
 
-find_package( OpenCV REQUIRED )
+# find_package(OpenCV 4 REQUIRED)
+include(/home/cartin/Packages/opencv/build/OpenCVConfig.cmake)
+# message(WARNING "OpenCV_VERSION: ${OpenCV_VERSION}")
 
 # dynamic reconfigure
 generate_dynamic_reconfigure_options(

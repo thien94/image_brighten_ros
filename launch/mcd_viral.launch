@@ -1,0 +1,68 @@
+<launch>
+  <arg name="img_left"  default="/d455b/infra1/image_rect_raw" />
+  <arg name="img_right" default="/d455b/infra2/image_rect_raw" />
+
+  <node pkg="image_brighten" name="image_brighten_left" type="image_brighten_node" clear_params="true" output="screen">
+
+    <param name="enable_dyn_reconf" value="true" type="bool" />
+
+    <param name="topic_image_input" value="$(arg img_left)" type="str" />
+    <param name="topic_image_output" value="$(arg img_left)/bright" type="str" />
+
+    # If disabled, node simply republishes resized image
+    <param name="enable_brighten" value="true" type="bool" />
+
+    # Get the latest frame at this frequency (may run slower, always processes latest frame)
+    <param name="max_process_freq" value="30" type="double" />
+
+    # Pre Processing Rescale Factor: a factor of 2 will divide the resolution by 2
+    <param name="scale_factor" value="1" type="int" />
+
+    # Dark Channel Search Radius
+    <param name="dark_ch_scale" value="4" type="int" />
+    <param name="transmission_scale" value="4" type="int" />
+    <param name="dehaze_radius" value="1" type="int" />
+    <!-- 0.5 for ntu, 1 for kth and tuhh -->
+    <param name="dehaze_omega" value="0.8" type="double" />
+    <param name="dehaze_t0" value="0.01" type="double" />
+
+    # Guided Filter Radius
+    <param name="guided_filter_radius" value="100" type="int" />
+    <param name="guided_filter_eps" value="0.05" type="double" />
+
+    # Factor to rescale Guided Filter Input (Quality depends on the input scaling factor)
+    <param name="guided_filter_resize_factor" value="4" type="int" />
+  </node>
+
+
+  <node pkg="image_brighten" name="image_brighten_right" type="image_brighten_node" clear_params="true" output="screen">
+
+    <param name="enable_dyn_reconf" value="true" type="bool" />
+
+    <param name="topic_image_input" value="$(arg img_right)" type="str" />
+    <param name="topic_image_output" value="$(arg img_right)/bright" type="str" />
+
+    # If disabled, node simply republishes resized image
+    <param name="enable_brighten" value="true" type="bool" />
+
+    # Get the latest frame at this frequency (may run slower, always processes latest frame)
+    <param name="max_process_freq" value="30" type="double" />
+
+    # Pre Processing Rescale Factor: a factor of 2 will divide the resolution by 2
+    <param name="scale_factor" value="1" type="int" />
+
+    # Dark Channel Search Radius
+    <param name="dark_ch_scale" value="4" type="int" />
+    <param name="transmission_scale" value="4" type="int" />
+    <param name="dehaze_radius" value="1" type="int" />
+    <param name="dehaze_omega" value="0.8" type="double" />
+    <param name="dehaze_t0" value="0.01" type="double" />
+
+    # Guided Filter Radius
+    <param name="guided_filter_radius" value="100" type="int" />
+    <param name="guided_filter_eps" value="0.05" type="double" />
+
+    # Factor to rescale Guided Filter Input (Quality depends on the input scaling factor)
+    <param name="guided_filter_resize_factor" value="4" type="int" />
+  </node>
+</launch>
